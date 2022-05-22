@@ -32,6 +32,8 @@ the domain where Headwind MDM should be installed.
 
 ## Running the Docker container
 
+** Please set up your domain name when running Headwind MDM! **
+
 To create the container, use the command:
 
     docker run --network="host" -d -e BASE_DOMAIN=build.h-mdm.com -v /etc/letsencrypt:/etc/letsencrypt --name="hmdm" headwind/hmdm:1.0
@@ -63,5 +65,19 @@ The container is configured by the environment variables.
 
 The full list of variables can be found in the Dockerfile.
 
+## First start and subsequent starts
 
+At first start, Headwind MDM performs the initialization:
+
+  - Creates the config files using the environment
+  - Initializes the database
+  - Converts the LetsEncrypt's (or your own) SSL certificates to a JKS keystore
+
+Subsequent starts of the container skip this step, but you can force the
+configuration renewal by setting the following environment variable:
+
+FORCE_RECONFIGURE=true
+
+When this variable is set to true, the configuration is always re-created by the
+Headwind MDM entry point script. 
 

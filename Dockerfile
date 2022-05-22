@@ -30,7 +30,7 @@ ENV SQL_HOST=localhost
 ENV SQL_PORT=5432
 ENV SQL_BASE=hmdm
 ENV SQL_USER=hmdm
-ENV SQL_PASS=topsecret
+ENV SQL_PASS=Ch@nGeMe
 
 ENV PROTOCOL=https
 #ENV BASE_DOMAIN=your-domain.com
