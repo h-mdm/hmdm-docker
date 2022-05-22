@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <!-- database configurations -->
+    <Parameter name="JDBC.driver"   value="org.postgresql.Driver"/>
+    <Parameter name="JDBC.url"      value="jdbc:postgresql://_SQL_HOST_:_SQL_PORT_/_SQL_BASE_"/>
+    <Parameter name="JDBC.username" value="_SQL_USER_"/>
+    <Parameter name="JDBC.password" value="_SQL_PASS_"/>
+
+    <!-- This directory is used to store uploaded app files, must be accessible for tomcat user -->
+    <Parameter name="files.directory" value="/usr/local/tomcat/work/files"/>
+
+    <!-- URL used to open Headwind MDM control panel -->
+    <Parameter name="base.url" value="_PROTOCOL_://_BASE_DOMAIN_"/>
+
+    <!-- private / shared; shared can be used only in Enterprise solution -->
+    <Parameter name="usage.scenario" value="private" />
+
+    <!-- If set to 1, the device configuration request must be signed by a shared secret (setup in hash.secret and in the Android app) 
+         0 or empty value does not require request signature which is less secure -->
+    <Parameter name="secure.enrollment" value="0"/>
+    <!-- A shared secret between mobile app and control panel. 
+         Don't change this unless you know what you're doing -->
+    <Parameter name="hash.secret" value="12345"/>
+
+    <!-- This directory is used to store files by plugins, must be accessible for tomcat user -->
+    <Parameter name="plugins.files.directory" value="/usr/local/tomcat/work/plugins"/>
+
+    <!-- Configuration for logging plugin, do not change this -->
+    <Parameter name="plugin.devicelog.persistence.config.class" value="com.hmdm.plugins.devicelog.persistence.postgres.DeviceLogPostgresPersistenceConfiguration"/>
+
+    <!-- Don't change this -->
+    <Parameter name="role.orgadmin.id" value="2"/>
+
+    <Parameter name="initialization.completion.signal.file" value="/usr/local/tomcat/work/"/>
+
+    <Parameter name="log4j.config" value="file:///usr/local/tomcat/work/log4j-hmdm.xml"/>
+
+    <Parameter name="aapt.command" value="aapt"/>
+
+    <!-- MQTT notification service parameters -->
+    <Parameter name="mqtt.server.uri" value="_BASE_DOMAIN_:31000"/>
+
+    <!-- Fast device search by last characters, here's the length -->
+    <Parameter name="device.fast.search.chars" value="5"/>
+
+    <Parameter name="sql.init.script.path" value="/usr/local/tomcat/work/init.sql"/>
+
+</Context>
