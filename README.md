@@ -81,3 +81,32 @@ FORCE_RECONFIGURE=true
 When this variable is set to true, the configuration is always re-created by the
 Headwind MDM entry point script. 
 
+## Running with the most common options by Docker Compose
+
+For a simple start of Headwind MDM on a fresh virtual machine, run the 
+following commands.
+
+    apt install docker-compose
+    cd hmdm-docker
+    docker build -t headwind/hmdm:1.0 .
+    cp .env.example .env
+    vim .env              # Replace ADMIN_EMAIL and BASE_DOMAIN to your values
+    docker-compose up
+
+The command `docker-compose up` will start Headwind MDM in the interactive 
+mode where you can easily trace and fix errors.
+
+Once Headwind MDM start is successful, you can start it in the background
+(detached) mode by using the command:
+
+    docker-compose up -d
+
+To view logs, use the command:
+
+    docker-compose logs hmdm -f
+
+To stop (but not remove) the service, use the command:
+
+    docker-compose stop
+
+

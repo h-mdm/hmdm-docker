@@ -22,9 +22,6 @@ services:
   hmdm:
     image: headwind/hmdm:1.0
     network_mode: host
-    depends_on: 
-      - certbot
-      - postgresql
     volumes:
       - ./volumes/letsencrypt:/etc/letsencrypt
     environment:

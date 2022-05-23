@@ -50,12 +50,23 @@ fi
 # jks is always created from the certificates
 if [[ "$PROTOCOL" == "https" ]]; then
     if [[ "$HTTPS_LETSENCRYPT" == "true" ]]; then
-        HTTPS_CERT_PATH=/etc/letsencrypt/live/$BASE_DOMAIN
+	HTTPS_CERT_PATH=/etc/letsencrypt/live/$BASE_DOMAIN
+        # If started by docker-compose, let's wait until certbot completes
+	until [[ -f $HTTPS_CERT_PATH/$HTTPS_PRIVKEY ]]; do
+            echo "Waiting for the LetsEncrypt keys..."
+	    sleep 5
+        done
     fi
 
     openssl pkcs12 -export -out $TOMCAT_DIR/ssl/hmdm.p12 -inkey $HTTPS_CERT_PATH/$HTTPS_PRIVKEY -in $HTTPS_CERT_PATH/$HTTPS_CERT -certfile $HTTPS_CERT_PATH/$HTTPS_FULLCHAIN -password pass:$PASSWORD
     keytool -importkeystore -destkeystore $TOMCAT_DIR/ssl/hmdm.jks -srckeystore $TOMCAT_DIR/ssl/hmdm.p12 -srcstoretype PKCS12 -srcstorepass $PASSWORD -deststorepass $PASSWORD -noprompt    
 fi
+
+# Waiting for the database
+until PGPASSWORD=$SQL_PASS psql -h "$SQL_HOST" -U "$SQL_USER" -c '\q'; do
+  echo "Waiting for the PostgreSQL database..."
+  sleep 5
+done
 
 catalina.sh run
 
