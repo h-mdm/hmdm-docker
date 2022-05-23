@@ -7,6 +7,10 @@ The image is based on Ubuntu 20.04 and Tomcat 9.
 It doesn't include PostgreSQL and certbot, so they need to be started in
 separate containers or on the host machine.
 
+As an alternative, you can use docker-compose to run Headwind MDM and all 
+required packages (certbot, PostgreSQL) on a fresh virtual machine with the 
+most common options (see below).
+
 ## Building the image from the source code
 
 Before building the image, review the default variables (in particular the 
@@ -86,7 +90,7 @@ Headwind MDM entry point script.
 For a simple start of Headwind MDM on a fresh virtual machine, run the 
 following commands.
 
-    apt install docker-compose
+    apt install -y docker-compose
     cd hmdm-docker
     docker build -t headwind/hmdm:1.0 .
     cp .env.example .env
