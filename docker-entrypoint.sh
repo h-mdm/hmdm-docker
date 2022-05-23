@@ -8,7 +8,7 @@ PASSWORD=123456
 HMDM_WAR="$(basename -- $HMDM_URL)"
 
 if [[ ! -f "$HMDM_DIR/$HMDM_WAR" ]]; then
-    wget $HMDM_URL -O $HMDM_DIR/$HMDM_WAR
+    wget $DOWNLOAD_CREDENTIALS $HMDM_URL -O $HMDM_DIR/$HMDM_WAR
 fi
 
 if [[ ! -f "$TOMCAT_DIR/webapps/ROOT.war" ]] || [[ "$FORCE_RECONFIGURE" == "true" ]]; then
