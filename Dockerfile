@@ -1,6 +1,5 @@
 # syntax=docker/dockerfile:1
 
-FROM ubuntu:20.04
 FROM tomcat:9.0.40
 
 RUN apt-get update -y
@@ -25,7 +24,7 @@ ENV INSTALL_LANGUAGE=en
 ENV HMDM_VARIANT=os
 ENV DOWNLOAD_CREDENTIALS=
 ENV HMDM_URL=https://h-mdm.com/files/hmdm-5.06.3-$HMDM_VARIANT.war
-ENV CLIENT_VERSION=5.04
+ENV CLIENT_VERSION=5.05
 
 ENV SQL_HOST=localhost
 ENV SQL_PORT=5432
@@ -51,6 +50,6 @@ EXPOSE 31000
 
 COPY docker-entrypoint.sh /
 COPY tomcat_conf/server.xml /usr/local/tomcat/conf/server.xml 
-ADD templates /opt/hmdm/templates
+ADD templates /opt/hmdm/templates/
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

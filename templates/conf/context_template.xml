@@ -38,7 +38,7 @@
     <Parameter name="aapt.command" value="aapt"/>
 
     <!-- MQTT notification service parameters -->
-    <Parameter name="mqtt.server.uri" value="_BASE_DOMAIN_:31000"/>
+    <Parameter name="mqtt.server.uri" value="0.0.0.0:31000"/>
 
     <!-- Fast device search by last characters, here's the length -->
     <Parameter name="device.fast.search.chars" value="5"/>

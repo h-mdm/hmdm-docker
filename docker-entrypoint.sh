@@ -1,21 +1,26 @@
-#!/bin/bash
+#!/bin/sh
 HMDM_DIR=/opt/hmdm
-TEMPLATE_DIR=/opt/hmdm/templates
+TEMPLATE_DIR=$HMDM_DIR/templates
 TOMCAT_DIR=/usr/local/tomcat
-BASE_DIR=/usr/local/tomcat/work
+BASE_DIR=$TOMCAT_DIR/work
+CACHE_DIR=$BASE_DIR/cache
 PASSWORD=123456
+
+for DIR in cache files plugins logs; do
+   [ -d "$BASE_DIR/$DIR" ] || mkdir "$BASE_DIR/$DIR"
+done
 
 HMDM_WAR="$(basename -- $HMDM_URL)"
 
-if [[ ! -f "$HMDM_DIR/$HMDM_WAR" ]]; then
-    wget $DOWNLOAD_CREDENTIALS $HMDM_URL -O $HMDM_DIR/$HMDM_WAR
+if [ ! -f "$CACHE_DIR/$HMDM_WAR" ]; then
+    wget $DOWNLOAD_CREDENTIALS $HMDM_URL -O $CACHE_DIR/$HMDM_WAR
 fi
 
-if [[ ! -f "$TOMCAT_DIR/webapps/ROOT.war" ]] || [[ "$FORCE_RECONFIGURE" == "true" ]]; then
-    cp $HMDM_DIR/$HMDM_WAR $TOMCAT_DIR/webapps/ROOT.war
+if [ ! -f "$TOMCAT_DIR/webapps/ROOT.war" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
+    cp $CACHE_DIR/$HMDM_WAR $TOMCAT_DIR/webapps/ROOT.war
 fi
 
-if [[ ! -f "$BASE_DIR/log4j.xml" ]] || [[ "$FORCE_RECONFIGURE" == "true" ]]; then
+if [ ! -f "$BASE_DIR/log4j.xml" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
     cp $TEMPLATE_DIR/conf/log4j_template.xml $BASE_DIR/log4j-hmdm.xml
 fi
 
@@ -23,37 +28,30 @@ if [ ! -d $TOMCAT_DIR/conf/Catalina/localhost ]; then
     mkdir -p $TOMCAT_DIR/conf/Catalina/localhost
 fi
 
-if [[ ! -f "$TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml" ]] || [[ "$FORCE_RECONFIGURE" == "true" ]]; then
+if [ ! -f "$TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml" ] || [ "$FORCE_RECONFIGURE" == "true" ]; then
     cat $TEMPLATE_DIR/conf/context_template.xml | sed "s|_SQL_HOST_|$SQL_HOST|g; s|_SQL_PORT_|$SQL_PORT|g; s|_SQL_BASE_|$SQL_BASE|g; s|_SQL_USER_|$SQL_USER|g; s|_SQL_PASS_|$SQL_PASS|g; s|_PROTOCOL_|$PROTOCOL|g; s|_BASE_DOMAIN_|$BASE_DOMAIN|g;" > $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml 
 fi
 
-if [ ! -d $BASE_DIR/files ]; then
-    mkdir $BASE_DIR/files
-fi
+for DIR in cache files plugins logs; do
+   [ -d "$BASE_DIR/$DIR" ] || mkdir "$BASE_DIR/$DIR"
+done
 
-if [ ! -d $BASE_DIR/plugins ]; then
-    mkdir $BASE_DIR/plugins
-fi
-
-if [ ! -d $BASE_DIR/logs ]; then
-    mkdir $BASE_DIR/logs
-fi
-
-if [ "INSTALL_LANGUAGE" != "ru" ]; then
+if [ "$INSTALL_LANGUAGE" != "ru" ]; then
     INSTALL_LANGUAGE=en
 fi
 
-if [[ ! -f "$BASE_DIR/init.sql" ]] || [[ "$FORCE_RECONFIGURE" == "true" ]]; then
+if [ ! -f "$BASE_DIR/init.sql" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
     cat $TEMPLATE_DIR/sql/hmdm_init.$INSTALL_LANGUAGE.sql | sed "s|_ADMIN_EMAIL_|$ADMIN_EMAIL|g; s|_HMDM_VERSION_|$CLIENT_VERSION|g; s|_HMDM_VARIANT_|$HMDM_VARIANT|g" > $BASE_DIR/init.sql
 fi
 
 # jks is always created from the certificates
-if [[ "$PROTOCOL" == "https" ]]; then
-    if [[ "$HTTPS_LETSENCRYPT" == "true" ]]; then
+if [ "$PROTOCOL" = "https" ]; then
+    if [ "$HTTPS_LETSENCRYPT" = "true" ]; then
 	HTTPS_CERT_PATH=/etc/letsencrypt/live/$BASE_DOMAIN
-        # If started by docker-compose, let's wait until certbot completes
-	until [[ -f $HTTPS_CERT_PATH/$HTTPS_PRIVKEY ]]; do
-            echo "Waiting for the LetsEncrypt keys..."
+        echo "Looking for SSL keys in $HTTPS_CERT_PATH..."
+	# If started by docker-compose, let's wait until certbot completes
+	until [ -f $HTTPS_CERT_PATH/$HTTPS_PRIVKEY ]; do
+            echo "Keys not found, waiting..."
 	    sleep 5
         done
     fi
