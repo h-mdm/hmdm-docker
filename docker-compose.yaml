@@ -18,13 +18,18 @@ services:
       POSTGRES_USER: ${SQL_USER}
       POSTGRES_PASSWORD: ${SQL_PASS}
       POSTGRES_DB: ${SQL_BASE}
+    volumes: ./volumes/db:/var/lib/postgresql/data
 
   hmdm:
     image: headwind/hmdm:1.0
-    network_mode: host
+    ports:
+      - 443:8443
+      - 31000:31000
     volumes:
+      - ./volumes/work:/usr/local/tomcat/work
       - ./volumes/letsencrypt:/etc/letsencrypt
     environment:
+      SQL_HOST: postgresql
       SQL_USER: ${SQL_USER}
       SQL_BASE: ${SQL_BASE}
       SQL_PASS: ${SQL_PASS}

@@ -148,7 +148,7 @@ INSERT INTO applicationversions (id, applicationid, version, url) VALUES
     (10040, 41, '0', NULL),
     (10041, 42, '0', NULL),
     (10042, 43, '0', NULL),
-    (10045, 46, '_HMDM_VERSION_', 'https://h-mdm.com/files/hmdm-_HMDM_VERSION_-_HMDM_VARIANT_.apk_'),
+    (10045, 46, '_HMDM_VERSION_', 'https://h-mdm.com/files/hmdm-_HMDM_VERSION_-_HMDM_VARIANT_.apk'),
     (10046, 47, '0', NULL),
     (10047, 48, '1.01', 'https://h-mdm.com/files/pager-1.01.apk'),
     (10048, 49, '1.02', 'https://h-mdm.com/files/phoneproxy-1.02.apk'),

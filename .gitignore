@@ -1,2 +1,4 @@
 .env
-volumes/work/
+volumes/letsencrypt/*
+volumes/work/*
+volumes/db/*
