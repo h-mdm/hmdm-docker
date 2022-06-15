@@ -18,7 +18,8 @@ services:
       POSTGRES_USER: ${SQL_USER}
       POSTGRES_PASSWORD: ${SQL_PASS}
       POSTGRES_DB: ${SQL_BASE}
-    volumes: ./volumes/db:/var/lib/postgresql/data
+    volumes: 
+      - ./volumes/db:/var/lib/postgresql/data
 
   hmdm:
     image: headwind/hmdm:1.0

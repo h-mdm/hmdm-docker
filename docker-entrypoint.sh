@@ -41,8 +41,21 @@ if [ "$INSTALL_LANGUAGE" != "ru" ]; then
 fi
 
 if [ ! -f "$BASE_DIR/init.sql" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
-    cat $TEMPLATE_DIR/sql/hmdm_init.$INSTALL_LANGUAGE.sql | sed "s|_ADMIN_EMAIL_|$ADMIN_EMAIL|g; s|_HMDM_VERSION_|$CLIENT_VERSION|g; s|_HMDM_VARIANT_|$HMDM_VARIANT|g" > $BASE_DIR/init.sql
+    cat $TEMPLATE_DIR/sql/hmdm_init.$INSTALL_LANGUAGE.sql | sed "s|_ADMIN_EMAIL_|$ADMIN_EMAIL|g; s|_HMDM_VERSION_|$CLIENT_VERSION|g; s|_HMDM_VARIANT_|$HMDM_VARIANT|g" > $BASE_DIR/init1.sql
 fi
+
+FILES_TO_DOWNLOAD=$(grep https://h-mdm.com $BASE_DIR/init1.sql | awk '{ print $4 }' | sed "s/'//g; s/)//g; s/,//g")
+
+cat $BASE_DIR/init1.sql | sed "s|https://h-mdm.com|$PROTOCOL://$BASE_DOMAIN|g" > $BASE_DIR/init1.sql
+rm $BASE_DIR/init1.sql
+
+cd $BASE_DIR
+for FILE in FILES_TO_DOWNLOAD; do
+    FILENAME=$(basename $FILE)
+    if [ ! -f "$BASE_DIR/files/$FILENAME" ]; then
+	wget $FILE
+    fi
+done
 
 # jks is always created from the certificates
 if [ "$PROTOCOL" = "https" ]; then
