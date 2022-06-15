@@ -46,11 +46,11 @@ fi
 
 FILES_TO_DOWNLOAD=$(grep https://h-mdm.com $BASE_DIR/init1.sql | awk '{ print $4 }' | sed "s/'//g; s/)//g; s/,//g")
 
-cat $BASE_DIR/init1.sql | sed "s|https://h-mdm.com|$PROTOCOL://$BASE_DOMAIN|g" > $BASE_DIR/init1.sql
+cat $BASE_DIR/init1.sql | sed "s|https://h-mdm.com|$PROTOCOL://$BASE_DOMAIN|g" > $BASE_DIR/init.sql
 rm $BASE_DIR/init1.sql
 
-cd $BASE_DIR
-for FILE in FILES_TO_DOWNLOAD; do
+cd $BASE_DIR/files
+for FILE in $FILES_TO_DOWNLOAD; do
     FILENAME=$(basename $FILE)
     if [ ! -f "$BASE_DIR/files/$FILENAME" ]; then
 	wget $FILE
@@ -78,6 +78,11 @@ until PGPASSWORD=$SQL_PASS psql -h "$SQL_HOST" -U "$SQL_USER" -c '\q'; do
   echo "Waiting for the PostgreSQL database..."
   sleep 5
 done
+
+# Avoid delays due to an issue with a random number
+cp /usr/local/openjdk-11/conf/security/java.security /tmp/java.security
+cat /tmp/java.security | sed "s|securerandom.source=file:/dev/random|securerandom.source=file:/dev/urandom|g" > /usr/local/openjdk-11/conf/security/java.security
+rm /tmp/java.security
 
 catalina.sh run
 
