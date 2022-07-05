@@ -1,5 +1,11 @@
 # Docker image for Headwind MDM
 
+Headwind MDM is an open source mobile device management software for Android 
+devices. It has been originally designed for Ubuntu Linux. This image helps
+to run Headwind MDM on any Linux.
+
+Headwind MDM project URL: https://h-mdm.com
+
 ## Summary
 
 The image is based on Ubuntu 20.04 and Tomcat 9.
