@@ -22,7 +22,7 @@ services:
       - ./volumes/db:/var/lib/postgresql/data
 
   hmdm:
-    image: headwind/hmdm:1.0
+    image: headwindmdm/hmdm:0.1.0
     ports:
       - 443:8443
       - 31000:31000
