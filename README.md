@@ -51,7 +51,7 @@ To create the container, use the command:
     docker run -d -p 443:8443 -p 31000:31000 -e SQL_HOST=database.host -e SQL_BASE=hmdm -e SQL_USER=hmdm -e SQL_PASS=password -e BASE_DOMAIN=build.h-mdm.com -v /etc/letsencrypt:/etc/letsencrypt -v $(pwd)/volumes/work:/usr/local/tomcat/work --name="hmdm" headwindmdm/hmdm:0.1.0
 
 If everything is fine, Headwind MDM will become available via the url 
-https://your-mdm-domain.com in a few seconds. 
+`https://your-mdm-domain.com` in a few seconds. 
 
 To view logs, use the command:
 
