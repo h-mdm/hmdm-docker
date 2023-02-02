@@ -74,7 +74,7 @@ if [ "$PROTOCOL" = "https" ]; then
 fi
 
 # Waiting for the database
-until PGPASSWORD=$SQL_PASS psql -h "$SQL_HOST" -U "$SQL_USER" -c '\q'; do
+until PGPASSWORD=$SQL_PASS psql -h "$SQL_HOST" -U "$SQL_USER" -d "$SQL_BASE" -c '\q'; do
   echo "Waiting for the PostgreSQL database..."
   sleep 5
 done
