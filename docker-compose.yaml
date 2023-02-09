@@ -22,7 +22,7 @@ services:
       - ./volumes/db:/var/lib/postgresql/data
 
   hmdm:
-    image: headwindmdm/hmdm:0.1.0
+    image: headwindmdm/hmdm:0.1.2
     ports:
       - 443:8443
       - 31000:31000
@@ -40,4 +40,5 @@ services:
       DOWNLOAD_CREDENTIALS: ${DOWNLOAD_CREDENTIALS}
       HMDM_URL: ${HMDM_URL}
       CLIENT_VERSION: ${CLIENT_VERSION}
+      FORCE_RECONFIGURE: ${FORCE_RECONFIGURE}
 

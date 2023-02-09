@@ -28,7 +28,7 @@ if [ ! -d $TOMCAT_DIR/conf/Catalina/localhost ]; then
     mkdir -p $TOMCAT_DIR/conf/Catalina/localhost
 fi
 
-if [ ! -f "$TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml" ] || [ "$FORCE_RECONFIGURE" == "true" ]; then
+if [ ! -f "$TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
     cat $TEMPLATE_DIR/conf/context_template.xml | sed "s|_SQL_HOST_|$SQL_HOST|g; s|_SQL_PORT_|$SQL_PORT|g; s|_SQL_BASE_|$SQL_BASE|g; s|_SQL_USER_|$SQL_USER|g; s|_SQL_PASS_|$SQL_PASS|g; s|_PROTOCOL_|$PROTOCOL|g; s|_BASE_DOMAIN_|$BASE_DOMAIN|g;" > $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml 
 fi
 
