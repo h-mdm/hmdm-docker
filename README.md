@@ -90,12 +90,15 @@ Headwind MDM entry point script.
 
 ## Running with the most common options by Docker Compose
 
+Docker-Compose requires just two files to start Headwind MDM: 
+    .env
+    docker-compose.yaml
+
 For a simple start of Headwind MDM on a fresh virtual machine, run the 
 following commands.
 
     apt install -y docker-compose
     cd hmdm-docker
-    docker build -t headwindmdm/hmdm:0.1.2 .
     cp .env.example .env
     vim .env              # Replace ADMIN_EMAIL and BASE_DOMAIN to your values
     docker-compose up
@@ -116,4 +119,27 @@ To stop (but not remove) the service, use the command:
 
     docker-compose stop
 
+## Using this Docker container with the Premium version
 
+To run Premium version, you need to change the HMDM_VARIANT, DOWNLOAD_CREDENTIALS
+and HMDM_URL variables in the .env file. To get the trial URLs, credentials and
+license keys, please fill the form at
+
+https://h-mdm.com/contact-us/
+
+## Resetting the container
+
+If something goes wrong, you may wish to reset the container and reinstall it 
+from scratch. The command 
+
+    docker-compose down
+    
+may not be enough, as it doesn't clear the downloaded files and initialized 
+database.
+
+To wipe all data, remove all entries in the `volumes` subdirectory:
+
+    rm -rf volumes/db volumes/work
+    
+(we recommend to keep the `volumes\letsencrypt` subdirectory to avoid problems
+with exceeding the LetsEncrypt certificate generation threshold).
