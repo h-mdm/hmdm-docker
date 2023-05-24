@@ -143,3 +143,10 @@ To wipe all data, remove all entries in the `volumes` subdirectory:
     
 (we recommend to keep the `volumes/letsencrypt` subdirectory to avoid problems
 with exceeding the LetsEncrypt certificate generation threshold).
+
+As an alternative, you can set the parameter in the .env file:
+
+    FORCE_RECONFIGURE=true
+    
+Important: this parameter should be unset after the initial setup, otherwise
+you may lose the application settings.
