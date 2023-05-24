@@ -141,5 +141,5 @@ To wipe all data, remove all entries in the `volumes` subdirectory:
 
     rm -rf volumes/db volumes/work
     
-(we recommend to keep the `volumes\letsencrypt` subdirectory to avoid problems
+(we recommend to keep the `volumes/letsencrypt` subdirectory to avoid problems
 with exceeding the LetsEncrypt certificate generation threshold).
