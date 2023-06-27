@@ -58,7 +58,7 @@ for FILE in $FILES_TO_DOWNLOAD; do
 done
 
 # jks is always created from the certificates
-if [ "$PROTOCOL" = "https" ]; then
+if [ "$PROTOCOL" == "https" ]; then
     if [ "$HTTPS_LETSENCRYPT" = "true" ]; then
 	HTTPS_CERT_PATH=/etc/letsencrypt/live/$BASE_DOMAIN
         echo "Looking for SSL keys in $HTTPS_CERT_PATH..."
