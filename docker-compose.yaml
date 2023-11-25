@@ -22,7 +22,7 @@ services:
       - ./volumes/db:/var/lib/postgresql/data
 
   hmdm:
-    image: headwindmdm/hmdm:0.1.2
+    image: headwindmdm/hmdm:0.1.3
     ports:
       - 443:8443
       - 31000:31000
@@ -35,6 +35,7 @@ services:
       SQL_BASE: ${SQL_BASE}
       SQL_PASS: ${SQL_PASS}
       BASE_DOMAIN: ${BASE_DOMAIN}
+      LOCAL_IP: ${LOCAL_IP}
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       HMDM_VARIANT: ${HMDM_VARIANT}
       DOWNLOAD_CREDENTIALS: ${DOWNLOAD_CREDENTIALS}

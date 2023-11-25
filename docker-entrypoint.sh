@@ -10,6 +10,16 @@ for DIR in cache files plugins logs; do
    [ -d "$BASE_DIR/$DIR" ] || mkdir "$BASE_DIR/$DIR"
 done
 
+if [ ! -z "$LOCAL_IP" ]; then
+    EXISTS=`grep $BASE_DOMAIN /etc/hosts`
+    if [ -z "$EXISTS" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
+        grep -v $BASE_DOMAIN /etc/hosts > /etc/hosts~
+	cp /etc/hosts~ /etc/hosts
+	echo "$LOCAL_IP $BASE_DOMAIN" >> /etc/hosts
+	rm -f /etc/hosts~
+    fi
+fi
+
 HMDM_WAR="$(basename -- $HMDM_URL)"
 
 if [ ! -f "$CACHE_DIR/$HMDM_WAR" ]; then
@@ -58,7 +68,7 @@ for FILE in $FILES_TO_DOWNLOAD; do
 done
 
 # jks is always created from the certificates
-if [ "$PROTOCOL" == "https" ]; then
+if [ "$PROTOCOL" = "https" ]; then
     if [ "$HTTPS_LETSENCRYPT" = "true" ]; then
 	HTTPS_CERT_PATH=/etc/letsencrypt/live/$BASE_DOMAIN
         echo "Looking for SSL keys in $HTTPS_CERT_PATH..."

@@ -6,6 +6,9 @@
     <Parameter name="JDBC.username" value="_SQL_USER_"/>
     <Parameter name="JDBC.password" value="_SQL_PASS_"/>
 
+    <!-- This directory is used to as a base directory to store app data -->
+    <Parameter name="base.directory" value="_BASE_DIRECTORY_"/>
+
     <!-- This directory is used to store uploaded app files, must be accessible for tomcat user -->
     <Parameter name="files.directory" value="/usr/local/tomcat/work/files"/>
 
@@ -20,7 +23,7 @@
     <Parameter name="secure.enrollment" value="0"/>
     <!-- A shared secret between mobile app and control panel. 
          Don't change this unless you know what you're doing -->
-    <Parameter name="hash.secret" value="12345"/>
+    <Parameter name="hash.secret" value="changeme-C3z9vi54"/>
 
     <!-- This directory is used to store files by plugins, must be accessible for tomcat user -->
     <Parameter name="plugins.files.directory" value="/usr/local/tomcat/work/plugins"/>
@@ -42,6 +45,22 @@
 
     <!-- Fast device search by last characters, here's the length -->
     <Parameter name="device.fast.search.chars" value="5"/>
+
+    <!-- Optional tag for MQTT authentication for more security
+         (supported by Headwind MDM launcher v5.05 and above) -->
+    <Parameter name="mqtt.auth" value="1"/>
+
+    <!-- If you have any reverse proxies, specify them here (IP addresses,
+    comma-separated) for correct logging of IP addresses -->
+    <!-- <Parameter name="proxy.addresses" value="192.168.1.101"/> -->
+
+    <!-- Name of the HTTP header containing the device IP address.
+    Defaults to X-Real-IP -->
+    <!-- <Parameter name="proxy.ip.header" value="X-Forwarded-For"/> -->
+
+    <!-- IP filters for devices and web panel UI users, comma-separated networks or single IPs -->
+<!--    <Parameter name="device.allowed.address" value='192.168.0.0/16,10.0.0.0/24'/>
+    <Parameter name="ui.allowed.address" value='192.168.0.0/16,10.0.0.0/24,213.11.0.3'/> -->
 
     <Parameter name="sql.init.script.path" value="/usr/local/tomcat/work/init.sql"/>
 
