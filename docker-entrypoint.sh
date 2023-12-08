@@ -35,7 +35,7 @@ if [ ! -f "$BASE_DIR/log4j.xml" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
 fi
 
 if [ ! -d "$BASE_DIR/emails" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
-    cp -r $TEMPLATE_DIR/conf/emails $BASE_DIR/emails
+    cp -r $TEMPLATE_DIR/emails $BASE_DIR/emails
 fi
 
 if [ ! -d $TOMCAT_DIR/conf/Catalina/localhost ]; then
