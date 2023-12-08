@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM tomcat:9.0.40
+FROM tomcat:9-jdk11-temurin-focal
 
 RUN apt-get update -y
 RUN apt-get install -y \
@@ -15,15 +15,19 @@ RUN mkdir -p /usr/local/tomcat/ssl
 # Set to 1 to force updating the config files
 # If not set, they will be created only if there's no files
 #ENV FORCE_RECONFIGURE=true
+ENV FORCE_RECONFIGURE=
 
 # Available values: en, ru (en by default)
 ENV INSTALL_LANGUAGE=en
 
 #ENV ADMIN_EMAIL=
 
+# Different for open source and premium versions!
+ENV SHARED_SECRET=changeme-C3z9vi54
+
 ENV HMDM_VARIANT=os
 ENV DOWNLOAD_CREDENTIALS=
-ENV HMDM_URL=https://h-mdm.com/files/hmdm-5.23.1-$HMDM_VARIANT.war
+ENV HMDM_URL=https://h-mdm.com/files/hmdm-5.24.1-$HMDM_VARIANT.war
 ENV CLIENT_VERSION=5.24
 
 ENV SQL_HOST=localhost
@@ -34,6 +38,10 @@ ENV SQL_PASS=Ch@nGeMe
 
 ENV PROTOCOL=https
 #ENV BASE_DOMAIN=your-domain.com
+
+# Set this parameter to your local IP address 
+# if your server is behind the NAT
+#ENV LOCAL_IP=172.31.91.82
 
 # Comment it to use custom certificates
 ENV HTTPS_LETSENCRYPT=true

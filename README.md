@@ -24,7 +24,7 @@ Headwind MDM URL) in the Dockerfile and change them if required.
 
 The build command is:
 
-    docker build -t headwindmdm/hmdm:0.1.2 .
+    docker build -t headwindmdm/hmdm:0.1.4 .
 
 ## Prerequisites
 
@@ -127,6 +127,25 @@ license keys, please fill the form at
 
 https://h-mdm.com/contact-us/
 
+## Attaching to the container
+
+You may need to attach to the container to change the Headwind MDM configuration
+in order to adjust some advanced settings.
+
+To find the container ID, use the command
+
+    docker ps
+
+Find the container ID of the image headwindmdm/hmdm:0.1.4, then run the command
+
+    docker exec -it containerid /bin/bash
+
+For example:
+
+    docker exec -it e81d47acec21 /bin/bash
+
+Notice: the container needs to be started before attaching to it.
+
 ## Resetting the container
 
 If something goes wrong, you may wish to reset the container and reinstall it 
@@ -143,6 +162,10 @@ To wipe all data, remove all entries in the `volumes` subdirectory:
     
 (we recommend to keep the `volumes/letsencrypt` subdirectory to avoid problems
 with exceeding the LetsEncrypt certificate generation threshold).
+
+There is also an interactive script removing the data:
+
+    ./remove-all.sh
 
 As an alternative, you can set the parameter in the .env file:
 
