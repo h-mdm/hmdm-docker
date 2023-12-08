@@ -7,7 +7,7 @@
     <Parameter name="JDBC.password" value="_SQL_PASS_"/>
 
     <!-- This directory is used to as a base directory to store app data -->
-    <Parameter name="base.directory" value="_BASE_DIRECTORY_"/>
+    <Parameter name="base.directory" value="/usr/local/tomcat/work"/>
 
     <!-- This directory is used to store uploaded app files, must be accessible for tomcat user -->
     <Parameter name="files.directory" value="/usr/local/tomcat/work/files"/>
@@ -77,8 +77,8 @@
 <!-- These are the customer email templates
      Email paths may contain _LANGUAGE_ replaced to a two-letter language
      The default language is en -->
-    <Parameter name="email.recovery.subj" value="_BASE_DIRECTORY_/emails/_LANGUAGE_/recovery_subj.txt"/>
-    <Parameter name="email.recovery.body" value="_BASE_DIRECTORY_/emails/_LANGUAGE_/recovery_body.txt"/>
+    <Parameter name="email.recovery.subj" value="/usr/local/tomcat/work/emails/en/recovery_subj.txt"/>
+    <Parameter name="email.recovery.body" value="/usr/local/tomcat/work/emails/en/recovery_body.txt"/>
 
     <!-- IP filters for devices and web panel UI users, comma-separated networks or single IPs -->
 <!--    <Parameter name="device.allowed.address" value='192.168.0.0/16,10.0.0.0/24'/>
