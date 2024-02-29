@@ -173,3 +173,46 @@ As an alternative, you can set the parameter in the .env file:
     
 Important: this parameter should be unset after the initial setup, otherwise
 you may lose the application settings.
+
+## FAQ
+- error "Connection closed" while trying to open the Headwind MDM web panel
+
+    The error log:
+
+    ```
+    Error running socket processor
+    java.lang.Exception: cannot create new ssl
+    at org.apache.tomcat.jni.SSL.newSSL(Native Method)
+    at org.apache.tomcat.util.net.openssl.OpenSSLEngine.<init>(OpenSSLEngine.java:200)
+    at org.apache.tomcat.util.net.openssl.OpenSSLContext.createSSLEngine(OpenSSLContext.java:581)
+    at org.apache.tomcat.util.net.AbstractJsseEndpoint.createSSLEngine(AbstractJsseEndpoint.java:127)
+    at org.apache.tomcat.util.net.SecureNioChannel.processSNI(SecureNioChannel.java:306)
+    at org.apache.tomcat.util.net.SecureNioChannel.handshake(SecureNioChannel.java:154)
+    at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1759)
+    at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+    at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+    at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+    at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+    at java.base/java.lang.Thread.run(Thread.java:833)
+    ```
+
+    By default, Headwind MDM uses SSL keystore type RSA, and certbot generated SSL keys in another type, for example, EC.
+    You can check the key type by using one of the following commands:
+
+    ```
+    openssl rsa -in privatekey.pem -text -noout
+    openssl ec -in privatekey.pem -text -noout
+    openssl dsa -in privatekey.pem -text -noout
+    ```
+    
+    One of these commands should succeed. 
+    Also, you can check the key file size. For RSA, it has a few thousands bytes. For EC, it has a few hundred bytes. For example, here's the sample EC key.
+  
+    ```
+    # ls -l privatekey.pem
+    -rw------- 1 root root 241 Jun 24 22:44 privatekey.pem
+    ```
+
+    If the key type is not RSA, open the file /var/lib/tomcat9/conf/server.xml, find the line
+    `<Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"`
+    and change the certificate type from "RSA" to "EC" or "DCA". Restart Tomcat to apply changes.
