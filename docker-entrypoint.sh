@@ -49,20 +49,20 @@ fi
 if { [ ! -z "$SMTP_HOST" ] && [ ! -z "$SMTP_USERNAME" ] && [ ! -z "$SMTP_PASSWORD" ]; } then
     sed -i "s|<!--    <Parameter name=\"smtp.host\" value=\"smtp.office365.com\"/>|    <Parameter name=\"smtp.host\" value=\"$SMTP_HOST\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
     sed -i "s|<Parameter name=\"smtp.username\" value=\"info@example.com\"/>|<Parameter name=\"smtp.username\" value=\"$SMTP_USERNAME\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
-    sed -i "s|<Parameter name=\"smtp.password\" value=\"changeme\"/>  -->|<Parameter name=\"smtp.password\" value=\"$SMTP_PASSWORD\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
+    sed -i "s|<Parameter name=\"smtp.password\" value=\"changeme\"/>|<Parameter name=\"smtp.password\" value=\"$SMTP_PASSWORD\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
     if [ ! -z "$SMTP_FROM" ]; then
         sed -i "s|<Parameter name=\"smtp.from\" value=\"info@example.com\"/>  -->|<Parameter name=\"smtp.from\" value=\"$SMTP_FROM\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
     else 
         sed -i "s|<Parameter name=\"smtp.from\" value=\"info@example.com\"/>  -->|<Parameter name=\"smtp.from\" value=\""$SMTP_USERNAME"\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
     fi
-    if [ ! -z "$SMTP_PORT" ]; then
+    if [ ! -z "$SMTP_PORT" ] && [ "$SMTP_PORT" != "587" ]; then
         sed -i "s|<Parameter name=\"smtp.port\" value=\"587\"/>|<Parameter name=\"smtp.port\" value=\"$SMTP_PORT\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
     fi
-    if [ ! -z "$SMTP_SSL" ]; then
+    if [ ! -z "$SMTP_SSL" ] && [ "$SMTP_SSL" != "0" ]; then
         sed -i "s|<Parameter name=\"smtp.ssl\" value=\"0\"/>|<Parameter name=\"smtp.ssl\" value=\"$SMTP_SSL\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
     fi
-    if [ ! -z "$SMTP_STARTTLS" ]; then
-        sed -i "s|<Parameter name=\"smtp.starttls\" value=\"1\"/>|<Parameter name=\"smtp.starttls\" value=\"$SMTP_STARTTL\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
+    if [ ! -z "$SMTP_STARTTLS" ] && [ "$SMTP_STARTTLS" != "1" ]; then
+        sed -i "s|<Parameter name=\"smtp.starttls\" value=\"1\"/>|<Parameter name=\"smtp.starttls\" value=\"$SMTP_STARTTLS\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
     fi
 fi
 
