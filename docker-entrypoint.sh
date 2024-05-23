@@ -46,6 +46,30 @@ if [ ! -f "$TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml" ] || [ "$FORCE_RECONFIG
     cat $TEMPLATE_DIR/conf/context_template.xml | sed "s|_SQL_HOST_|$SQL_HOST|g; s|_SQL_PORT_|$SQL_PORT|g; s|_SQL_BASE_|$SQL_BASE|g; s|_SQL_USER_|$SQL_USER|g; s|_SQL_PASS_|$SQL_PASS|g; s|_PROTOCOL_|$PROTOCOL|g; s|_BASE_DOMAIN_|$BASE_DOMAIN|g; s|_SHARED_SECRET_|$SHARED_SECRET|g;" > $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml 
 fi
 
+if { [ ! -z "$SMTP_HOST" ] && [ ! -z "$SMTP_USERNAME" ] && [ ! -z "$SMTP_PASSWORD" ]; } then
+    sed -i "s|<!--    <Parameter name=\"smtp.host\" value=\"smtp.office365.com\"/>|    <Parameter name=\"smtp.host\" value=\"$SMTP_HOST\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
+    sed -i "s|<Parameter name=\"smtp.username\" value=\"info@example.com\"/>|<Parameter name=\"smtp.username\" value=\"$SMTP_USERNAME\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
+    sed -i "s|<Parameter name=\"smtp.password\" value=\"changeme\"/>  -->|<Parameter name=\"smtp.password\" value=\"$SMTP_PASSWORD\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
+    if [ ! -z "$SMTP_FROM" ]; then
+        sed -i "s|<Parameter name=\"smtp.from\" value=\"info@example.com\"/>  -->|<Parameter name=\"smtp.from\" value=\"$SMTP_FROM\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
+    else 
+        sed -i "s|<Parameter name=\"smtp.from\" value=\"info@example.com\"/>  -->|<Parameter name=\"smtp.from\" value=\""$SMTP_USERNAME"\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
+    fi
+    if [ ! -z "$SMTP_PORT" ]; then
+        sed -i "s|<Parameter name=\"smtp.port\" value=\"587\"/>|<Parameter name=\"smtp.port\" value=\"$SMTP_PORT\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
+    fi
+    if [ ! -z "$SMTP_SSL" ]; then
+        sed -i "s|<Parameter name=\"smtp.ssl\" value=\"0\"/>|<Parameter name=\"smtp.ssl\" value=\"$SMTP_SSL\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
+    fi
+    if [ ! -z "$SMTP_STARTTLS" ]; then
+        sed -i "s|<Parameter name=\"smtp.starttls\" value=\"1\"/>|<Parameter name=\"smtp.starttls\" value=\"$SMTP_STARTTL\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
+    fi
+fi
+
+if [ ! -z "$SMTP_SSL_VER" ]; then
+    sed -i "s|<!-- <Parameter name=\"smtp.ssl.protocols\" value=\"TLSv1.2\"/> -->|<Parameter name=\"smtp.ssl.protocols\" value=\"$SMTP_SSL_VER\"/>|g" $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
+fi
+
 for DIR in cache files plugins logs; do
    [ -d "$BASE_DIR/$DIR" ] || mkdir "$BASE_DIR/$DIR"
 done

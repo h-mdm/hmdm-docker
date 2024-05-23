@@ -8,7 +8,7 @@ RUN apt-get install -y \
 	wget \
 	sed \
         postgresql-client \
-	&& rm -rf /var/lib/apt/lists/*
+	&& rm -rf /var/lib/apt/lists/* 
 RUN mkdir -p /usr/local/tomcat/conf/Catalina/localhost
 RUN mkdir -p /usr/local/tomcat/ssl
 
@@ -19,8 +19,6 @@ ENV FORCE_RECONFIGURE=
 
 # Available values: en, ru (en by default)
 ENV INSTALL_LANGUAGE=en
-
-#ENV ADMIN_EMAIL=
 
 # Different for open source and premium versions!
 ENV SHARED_SECRET=changeme-C3z9vi54
@@ -35,6 +33,17 @@ ENV SQL_PORT=5432
 ENV SQL_BASE=hmdm
 ENV SQL_USER=hmdm
 ENV SQL_PASS=Ch@nGeMe
+
+#ENV ADMIN_EMAIL=
+
+ENV SMTP_HOST=smtp.office365.com
+ENV SMTP_PORT=587
+ENV SMTP_SSL=0
+ENV SMTP_STARTTLS=1
+ENV SMTP_USERNAME=cinfo@example.com
+ENV SMTP_PASSWORD=changeme
+ENV SMTP_SSL_VER=TLSv1.2
+# ENV SMTP_FROM=cinfo@example.com
 
 ENV PROTOCOL=https
 #ENV BASE_DOMAIN=your-domain.com
