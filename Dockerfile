@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM tomcat:9-jdk11-temurin-focal
+FROM tomcat:9-jdk11-temurin-jammy
 
 RUN apt-get update -y
 RUN apt-get install -y \
