@@ -3,7 +3,7 @@
 FROM tomcat:9-jdk11-temurin-focal
 
 RUN apt-get update \
-    && apt-get full-upgrade -y
+    && apt-get upgrade -y
 RUN apt-get install -y \
 	aapt \
 	wget \
