@@ -2,7 +2,8 @@
 
 FROM tomcat:9-jdk11-temurin-jammy
 
-RUN apt-get update -y
+RUN apt-get update \
+    && apt-get upgrade -y
 RUN apt-get install -y \
 	aapt \
 	wget \
