@@ -8,7 +8,7 @@ Headwind MDM project URL: https://h-mdm.com
 
 ## Summary
 
-The image is based on Ubuntu 20.04 and Tomcat 9.
+The image is based on Ubuntu 22.04 and Tomcat 9.
 
 It doesn't include PostgreSQL and certbot, so they need to be started in
 separate containers or on the host machine.
