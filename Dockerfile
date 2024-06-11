@@ -2,13 +2,6 @@
 
 FROM tomcat:9-jdk11-temurin-jammy
 
-RUN apt update \
-    && apt full-upgrade -y
-RUN apt install -y aapt wget sed postgresql-client \
-	&& rm -rf /var/lib/apt/lists/*
-RUN mkdir -p /usr/local/tomcat/conf/Catalina/localhost
-RUN mkdir -p /usr/local/tomcat/ssl
-
 # Set to 1 to force updating the config files
 # If not set, they will be created only if there's no files
 #ENV FORCE_RECONFIGURE=true
@@ -48,6 +41,13 @@ ENV HTTPS_LETSENCRYPT=true
 ENV HTTPS_CERT=cert.pem
 ENV HTTPS_FULLCHAIN=fullchain.pem
 ENV HTTPS_PRIVKEY=privkey.pem
+
+RUN apt update \
+    && apt full-upgrade -y
+RUN apt install -y aapt wget sed postgresql-client \
+	&& rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /usr/local/tomcat/conf/Catalina/localhost
+RUN mkdir -p /usr/local/tomcat/ssl
 
 EXPOSE 8080
 EXPOSE 8443
