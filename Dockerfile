@@ -2,13 +2,9 @@
 
 FROM tomcat:9-jdk11-temurin-jammy
 
-RUN apt-get update \
-    && apt-get upgrade -y
-RUN apt-get install -y \
-	aapt \
-	wget \
-	sed \
-        postgresql-client \
+RUN apt update \
+    && apt full-upgrade -y
+RUN apt install -y aapt wget sed postgresql-client \
 	&& rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /usr/local/tomcat/conf/Catalina/localhost
 RUN mkdir -p /usr/local/tomcat/ssl
