@@ -35,7 +35,7 @@ ENV HTTPS_PRIVKEY=privkey.pem
 RUN apt update \
     && apt full-upgrade -y
 RUN apt install -y aapt wget sed postgresql-client \
-	&& rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /usr/local/tomcat/conf/Catalina/localhost
 RUN mkdir -p /usr/local/tomcat/ssl
 
