@@ -38,7 +38,7 @@
 
     <Parameter name="log4j.config" value="file:///usr/local/tomcat/work/log4j-hmdm.xml"/>
 
-    <Parameter name="aapt.command" value="aapt"/>
+    <Parameter name="aapt.command" value="aapt2"/>
 
     <!-- MQTT notification service parameters -->
     <Parameter name="mqtt.server.uri" value="0.0.0.0:31000"/>
