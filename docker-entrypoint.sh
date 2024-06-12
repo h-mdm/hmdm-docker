@@ -10,24 +10,24 @@ for DIR in cache files plugins logs; do
    [ -d "$BASE_DIR/$DIR" ] || mkdir "$BASE_DIR/$DIR"
 done
 
-if [ ! -z "$LOCAL_IP" ]; then
-    EXISTS=`grep $BASE_DOMAIN /etc/hosts`
+if [ -n "$LOCAL_IP" ]; then
+    EXISTS=$(grep "$BASE_DOMAIN" /etc/hosts)
     if [ -z "$EXISTS" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
-        grep -v $BASE_DOMAIN /etc/hosts > /etc/hosts~
+        grep -v "$BASE_DOMAIN" /etc/hosts > /etc/hosts~
 	cp /etc/hosts~ /etc/hosts
 	echo "$LOCAL_IP $BASE_DOMAIN" >> /etc/hosts
 	rm -f /etc/hosts~
     fi
 fi
 
-HMDM_WAR="$(basename -- $HMDM_URL)"
+HMDM_WAR="$(basename -- "$HMDM_URL")"
 
 if [ ! -f "$CACHE_DIR/$HMDM_WAR" ]; then
-    wget $DOWNLOAD_CREDENTIALS $HMDM_URL -O $CACHE_DIR/$HMDM_WAR
+    wget "$DOWNLOAD_CREDENTIALS" "$HMDM_URL" -O $CACHE_DIR/"$HMDM_WAR"
 fi
 
 if [ ! -f "$TOMCAT_DIR/webapps/ROOT.war" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
-    cp $CACHE_DIR/$HMDM_WAR $TOMCAT_DIR/webapps/ROOT.war
+    cp $CACHE_DIR/"$HMDM_WAR" $TOMCAT_DIR/webapps/ROOT.war
 fi
 
 if [ ! -f "$BASE_DIR/log4j.xml" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
@@ -55,7 +55,7 @@ if [ "$INSTALL_LANGUAGE" != "ru" ]; then
 fi
 
 if [ ! -f "$BASE_DIR/init.sql" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
-    cat $TEMPLATE_DIR/sql/hmdm_init.$INSTALL_LANGUAGE.sql | sed "s|_ADMIN_EMAIL_|$ADMIN_EMAIL|g; s|_HMDM_VERSION_|$CLIENT_VERSION|g; s|_HMDM_VARIANT_|$HMDM_VARIANT|g" > $BASE_DIR/init1.sql
+    cat $TEMPLATE_DIR/sql/hmdm_init."$INSTALL_LANGUAGE".sql | sed "s|_ADMIN_EMAIL_|$ADMIN_EMAIL|g; s|_HMDM_VERSION_|$CLIENT_VERSION|g; s|_HMDM_VARIANT_|$HMDM_VARIANT|g" > $BASE_DIR/init1.sql
 fi
 
 FILES_TO_DOWNLOAD=$(grep https://h-mdm.com $BASE_DIR/init1.sql | awk '{ print $4 }' | sed "s/'//g; s/)//g; s/,//g")
@@ -63,11 +63,11 @@ FILES_TO_DOWNLOAD=$(grep https://h-mdm.com $BASE_DIR/init1.sql | awk '{ print $4
 cat $BASE_DIR/init1.sql | sed "s|https://h-mdm.com|$PROTOCOL://$BASE_DOMAIN|g" > $BASE_DIR/init.sql
 rm $BASE_DIR/init1.sql
 
-cd $BASE_DIR/files
+cd $BASE_DIR/files || exit
 for FILE in $FILES_TO_DOWNLOAD; do
-    FILENAME=$(basename $FILE)
+    FILENAME=$(basename "$FILE")
     if [ ! -f "$BASE_DIR/files/$FILENAME" ]; then
-	wget $FILE
+	wget "$FILE"
     fi
 done
 
@@ -77,13 +77,13 @@ if [ "$PROTOCOL" = "https" ]; then
 	HTTPS_CERT_PATH=/etc/letsencrypt/live/$BASE_DOMAIN
         echo "Looking for SSL keys in $HTTPS_CERT_PATH..."
 	# If started by docker-compose, let's wait until certbot completes
-	until [ -f $HTTPS_CERT_PATH/$HTTPS_PRIVKEY ]; do
+	until [ -f "$HTTPS_CERT_PATH"/"$HTTPS_PRIVKEY" ]; do
             echo "Keys not found, waiting..."
 	    sleep 5
         done
     fi
 
-    openssl pkcs12 -export -out $TOMCAT_DIR/ssl/hmdm.p12 -inkey $HTTPS_CERT_PATH/$HTTPS_PRIVKEY -in $HTTPS_CERT_PATH/$HTTPS_CERT -certfile $HTTPS_CERT_PATH/$HTTPS_FULLCHAIN -password pass:$PASSWORD
+    openssl pkcs12 -export -out $TOMCAT_DIR/ssl/hmdm.p12 -inkey "$HTTPS_CERT_PATH"/"$HTTPS_PRIVKEY" -in "$HTTPS_CERT_PATH"/"$HTTPS_CERT" -certfile "$HTTPS_CERT_PATH"/"$HTTPS_FULLCHAIN" -password pass:$PASSWORD
     keytool -importkeystore -destkeystore $TOMCAT_DIR/ssl/hmdm.jks -srckeystore $TOMCAT_DIR/ssl/hmdm.p12 -srcstoretype PKCS12 -srcstorepass $PASSWORD -deststorepass $PASSWORD -noprompt    
 fi
 
@@ -95,7 +95,7 @@ done
 
 # Avoid delays due to an issue with a random number
 cp /opt/java/openjdk/conf/security/java.security /tmp/java.security
-cat /tmp/java.security | sed "s|securerandom.source=file:/dev/random|securerandom.source=file:/dev/urandom|g" > /opt/java/openjdk/conf/security/java.security
+sed "s|securerandom.source=file:/dev/random|securerandom.source=file:/dev/urandom|g" /tmp/java.security > /opt/java/openjdk/conf/security/java.security
 rm /tmp/java.security
 
 catalina.sh run
