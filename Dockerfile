@@ -53,9 +53,7 @@ ENV HTTPS_CERT=cert.pem
 ENV HTTPS_FULLCHAIN=fullchain.pem
 ENV HTTPS_PRIVKEY=privkey.pem
 
-EXPOSE 8080
-EXPOSE 8443
-EXPOSE 31000
+EXPOSE 8080/tcp 8443/tcp 31000/tcp
 
 COPY docker-entrypoint.sh /
 COPY tomcat_conf/server.xml /usr/local/tomcat/conf/server.xml 
