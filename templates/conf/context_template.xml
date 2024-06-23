@@ -20,7 +20,7 @@
 
     <!-- If set to 1, the device configuration request must be signed by a shared secret (setup in hash.secret and in the Android app) 
          0 or empty value does not require request signature which is less secure -->
-    <Parameter name="secure.enrollment" value="0"/>
+    <Parameter name="secure.enrollment" value="_SECURE_ENROLLMENT_"/>
     <!-- A shared secret between mobile app and control panel. 
          Don't change this unless you know what you're doing -->
     <Parameter name="hash.secret" value="_SHARED_SECRET_"/>
@@ -52,7 +52,7 @@
 
     <!-- Optional tag for delaying MQTT messages in milliseconds
      to avoid congestion when all devices are updating configuration at the same time -->
-    <!-- <Parameter name="mqtt.message.delay" value="100"/> -->
+    <Parameter name="mqtt.message.delay" value="_MQTT_MSG_DELAY_"/>
 
     <!-- If you have any reverse proxies, specify them here (IP addresses, 
     comma-separated) for correct logging of IP addresses -->
@@ -63,16 +63,14 @@
     <!-- <Parameter name="proxy.ip.header" value="X-Forwarded-For"/> -->
 
     <!-- Email parameters are necessary for password recovery -->
-<!--    <Parameter name="smtp.host" value="smtp.office365.com"/>
-    <Parameter name="smtp.port" value="587"/>
-    <Parameter name="smtp.ssl" value="0"/>
-    <Parameter name="smtp.starttls" value="1"/>
-    <Parameter name="smtp.username" value="info@example.com"/>
-    <Parameter name="smtp.password" value="changeme"/>
-    <Parameter name="smtp.from" value="info@example.com"/>  -->
-
-    <!-- Uncomment this line if you get 'Could not convert socket to TLS' -->
-    <!-- <Parameter name="smtp.ssl.protocols" value="TLSv1.2"/> -->
+    <Parameter name="smtp.host" value="_SMTP_HOST_"/>
+    <Parameter name="smtp.port" value="_SMTP_PORT_"/>
+    <Parameter name="smtp.ssl" value="_SMTP_SSL_"/>
+    <Parameter name="smtp.starttls" value="_SMTP_STARTTLS_"/>
+    <Parameter name="smtp.username" value="_SMTP_USERNAME_"/>
+    <Parameter name="smtp.from" value="_SMTP_FROM_"/>
+    <Parameter name="smtp.password" value="_SMTP_PASSWORD_"/>
+    <Parameter name="smtp.ssl.protocols" value="_SMTPSSL_VER_"/>
 
 <!-- These are the customer email templates
      Email paths may contain _LANGUAGE_ replaced to a two-letter language
