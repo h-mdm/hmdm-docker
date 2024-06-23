@@ -2,15 +2,15 @@
 
 FROM tomcat:9-jdk11-temurin-focal
 
-RUN apt-get update -y
-RUN apt-get install -y \
+RUN apt-get update -y \
+	&& apt-get install -y \
 	aapt \
 	wget \
 	sed \
-        postgresql-client \
+    postgresql-client \
 	&& rm -rf /var/lib/apt/lists/*
-RUN mkdir -p /usr/local/tomcat/conf/Catalina/localhost
-RUN mkdir -p /usr/local/tomcat/ssl
+RUN mkdir -p /usr/local/tomcat/conf/Catalina/localhost \
+    && mkdir -p /usr/local/tomcat/ssl
 
 # Set to 1 to force updating the config files
 # If not set, they will be created only if there's no files
@@ -23,27 +23,27 @@ ENV INSTALL_LANGUAGE=en
 # Different for open source and premium versions!
 ENV SHARED_SECRET=changeme-C3z9vi54
 
-ENV HMDM_VARIANT=os
 ENV DOWNLOAD_CREDENTIALS=
-ENV HMDM_URL=https://h-mdm.com/files/hmdm-5.24.1-$HMDM_VARIANT.war
-ENV CLIENT_VERSION=5.24
+ENV HMDM_VARIANT=os 
+ENV	HMDM_URL=https://h-mdm.com/files/hmdm-5.27.1-$HMDM_VARIANT.war \
+	CLIENT_VERSION=5.27
 
-ENV SQL_HOST=localhost
-ENV SQL_PORT=5432
-ENV SQL_BASE=hmdm
-ENV SQL_USER=hmdm
-ENV SQL_PASS=Ch@nGeMe
+ENV SQL_HOST=localhost \
+	SQL_PORT=5432 \
+	SQL_BASE=hmdm \
+	SQL_USER=hmdm \
+	SQL_PASS=Ch@nGeMe
 
 #ENV ADMIN_EMAIL=
 
-ENV SMTP_HOST=smtp.office365.com
-ENV SMTP_PORT=587
-ENV SMTP_SSL=0
-ENV SMTP_STARTTLS=1
-ENV SMTP_USERNAME=cinfo@example.com
-ENV SMTP_PASSWORD=changeme
-ENV SMTP_SSL_VER=TLSv1.2
-# ENV SMTP_FROM=cinfo@example.com
+ENV SMTP_HOST=smtp.office365.com \
+	SMTP_PORT=587 \
+	SMTP_SSL=0 \
+	SMTP_STARTTLS=1 \
+	SMTP_FROM=cinfo@example.com \
+	SMTP_USERNAME=cinfo@example.com \
+	SMTP_PASSWORD=changeme \
+	SMTP-SSL_VER=TLSv1.2
 
 ENV PROTOCOL=https
 #ENV BASE_DOMAIN=your-domain.com
@@ -61,9 +61,9 @@ ENV HTTPS_CERT=cert.pem
 ENV HTTPS_FULLCHAIN=fullchain.pem
 ENV HTTPS_PRIVKEY=privkey.pem
 
-EXPOSE 8080
-EXPOSE 8443
-EXPOSE 31000
+EXPOSE 8080 \
+	   8443 \
+	   31000
 
 COPY docker-entrypoint.sh /
 COPY tomcat_conf/server.xml /usr/local/tomcat/conf/server.xml 
