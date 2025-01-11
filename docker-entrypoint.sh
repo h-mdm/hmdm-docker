@@ -30,6 +30,8 @@ if [ ! -f "$TOMCAT_DIR/webapps/ROOT.war" ] || [ "$FORCE_RECONFIGURE" = "true" ];
     cp $CACHE_DIR/$HMDM_WAR $TOMCAT_DIR/webapps/ROOT.war
 fi
 
+$HMDM_DIR/update-web-app-docker.sh
+
 if [ ! -f "$BASE_DIR/log4j.xml" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
     cp $TEMPLATE_DIR/conf/log4j_template.xml $BASE_DIR/log4j-hmdm.xml
 fi
