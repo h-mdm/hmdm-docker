@@ -178,7 +178,7 @@ you may lose the application settings.
 
 To use custom SSL certificates
 
--Comment out the whole certbot: section in docker-compose.yaml
+- Comment out the whole certbot: section in docker-compose.yaml
 - Create the subdirectory ./volumes/letsencrypt/live/your-domain.com/
 - Copy the private key, certificate, and full certificate chain
 - in the PEM (base64) format to that subdirectory. Use the following names:
