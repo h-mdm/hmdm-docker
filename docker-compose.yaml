@@ -1,5 +1,17 @@
 services:
 
+  # To use custom SSL certificates:
+  # 1. Comment out the whole certbot: section
+  # 2. Create the subdirectory ./volumes/letsencrypt/live/your-domain.com/
+  # 3. Copy the private key, certificate, and full certificate chain 
+  # in the PEM (base64) format to that subdirectory. Use the following names:
+  # cert.pem, fullchain.pem, privkey.pem
+  #
+  # To use plain HTTP:
+  # 1. Comment out the certbot: section
+  # 2. Uncomment the port 80 forwarding
+  # 3. Set the environment variable in the .env file: PROTOCOL=http
+  # 
   certbot:
     image: certbot/certbot:v1.4.0
     volumes:
@@ -20,8 +32,10 @@ services:
       - ./volumes/db:/var/lib/postgresql/data
 
   hmdm:
-    image: headwindmdm/hmdm:0.1.4
+    image: headwindmdm/hmdm:0.1.5
     ports:
+      # Uncomment this port forwarding if you want to use plain HTTP instead of HTTPS
+      #- 80:8080
       - 443:8443
       - 31000:31000
     volumes:
@@ -34,6 +48,7 @@ services:
       SQL_PASS: ${SQL_PASS}
       BASE_DOMAIN: ${BASE_DOMAIN}
       LOCAL_IP: ${LOCAL_IP}
+      PROTOCOL: ${PROTOCOL}
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       SHARED_SECRET: ${SHARED_SECRET}
       HMDM_VARIANT: ${HMDM_VARIANT}

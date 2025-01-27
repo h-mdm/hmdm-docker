@@ -25,8 +25,8 @@ ENV HMDM_VARIANT=os
 ENV	INSTALL_LANGUAGE=en \
 	SHARED_SECRET=changeme-C3z9vi54 \
 	DOWNLOAD_CREDENTIALS= \
-	HMDM_URL=https://h-mdm.com/files/hmdm-5.27.1-$HMDM_VARIANT.war \
-	CLIENT_VERSION=5.27 \
+	HMDM_URL=https://h-mdm.com/files/hmdm-5.30.3-$HMDM_VARIANT.war \
+	CLIENT_VERSION=6.14 \
 	SQL_HOST=localhost \
 	SQL_PORT=5432 \
 	SQL_BASE=hmdm \
@@ -62,6 +62,7 @@ EXPOSE 8080 \
 	   31000
 
 COPY docker-entrypoint.sh /
+COPY update-web-app-docker.sh /opt/hmdm/
 COPY tomcat_conf/server.xml /usr/local/tomcat/conf/server.xml 
 ADD templates /opt/hmdm/templates/
 

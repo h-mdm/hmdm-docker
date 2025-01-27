@@ -24,7 +24,7 @@ Headwind MDM URL) in the Dockerfile and change them if required.
 
 The build command is:
 
-    docker build -t headwindmdm/hmdm:0.1.4 .
+    docker build -t headwindmdm/hmdm:0.1.5 .
 
 ## Prerequisites
 
@@ -48,7 +48,7 @@ the domain where Headwind MDM should be installed.
 
 To create the container, use the command:
 
-    docker run -d -p 443:8443 -p 31000:31000 -e SQL_HOST=database.host -e SQL_BASE=hmdm -e SQL_USER=hmdm -e SQL_PASS=password -e BASE_DOMAIN=build.h-mdm.com -v /etc/letsencrypt:/etc/letsencrypt -v $(pwd)/volumes/work:/usr/local/tomcat/work --name="hmdm" headwindmdm/hmdm:0.1.2
+    docker run -d -p 443:8443 -p 31000:31000 -e SQL_HOST=database.host -e SQL_BASE=hmdm -e SQL_USER=hmdm -e SQL_PASS=password -e BASE_DOMAIN=build.h-mdm.com -v /etc/letsencrypt:/etc/letsencrypt -v $(pwd)/volumes/work:/usr/local/tomcat/work --name="hmdm" headwindmdm/hmdm:0.1.5
 
 If everything is fine, Headwind MDM will become available via the url 
 `https://your-mdm-domain.com` in a few seconds. 
@@ -136,7 +136,7 @@ To find the container ID, use the command
 
     docker ps
 
-Find the container ID of the image headwindmdm/hmdm:0.1.4, then run the command
+Find the container ID of the image headwindmdm/hmdm:0.1.5, then run the command
 
     docker exec -it containerid /bin/bash
 
@@ -173,3 +173,20 @@ As an alternative, you can set the parameter in the .env file:
     
 Important: this parameter should be unset after the initial setup, otherwise
 you may lose the application settings.
+
+## Using custom SSL certificates in Docker Compose
+
+To use custom SSL certificates
+
+- Comment out the whole certbot: section in docker-compose.yaml
+- Create the subdirectory ./volumes/letsencrypt/live/your-domain.com/
+- Copy the private key, certificate, and full certificate chain
+- in the PEM (base64) format to that subdirectory. Use the following names:
+- cert.pem, fullchain.pem, privkey.pem
+
+To use plain HTTP, edit the contents of the docker-compose.yaml:
+
+- Comment out the certbot: section
+- Uncomment the port 80 forwarding
+- Set the environment variable in the .env file: PROTOCOL=http
+
