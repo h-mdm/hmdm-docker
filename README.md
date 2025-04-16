@@ -6,6 +6,10 @@ to run Headwind MDM on any Linux.
 
 Headwind MDM project URL: https://h-mdm.com
 
+## TL;DR
+
+For a quick start, proceed directly to the ["Running with the most common options by Docker Compose"](#quickstart) section.
+
 ## Summary
 
 The image is based on Ubuntu 22.04 and Tomcat 9.
@@ -88,6 +92,7 @@ FORCE_RECONFIGURE=true
 When this variable is set to true, the configuration is always re-created by the
 Headwind MDM entry point script. 
 
+<a id="quickstart"></a>
 ## Running with the most common options by Docker Compose
 
 Docker-Compose requires just two files to start Headwind MDM: 
