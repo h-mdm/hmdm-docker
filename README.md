@@ -179,6 +179,14 @@ As an alternative, you can set the parameter in the .env file:
 Important: this parameter should be unset after the initial setup, otherwise
 you may lose the application settings.
 
+## Configuring Headwind MDM
+
+The Headwind MDM config file is mapped to `volumes/hmdm-config/ROOT.xml`. 
+
+Restarting the container applies the changes. To avoid loss of changes, make sure 
+the `FORCE_RECONFIGURE` flag is not set in the `.env` file (this flag forces 
+the container to reset the XML config file to its default state).
+
 ## Using custom SSL certificates in Docker Compose
 
 To use custom SSL certificates
