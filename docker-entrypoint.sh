@@ -6,6 +6,25 @@ BASE_DIR=$TOMCAT_DIR/work
 CACHE_DIR=$BASE_DIR/cache
 PASSWORD=123456
 
+# Normalize reverse proxy flag (true/false)
+case "${REVERSE_PROXY:-false}" in
+  [Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|on) REVERSE_PROXY="true" ;;
+  *) REVERSE_PROXY="false" ;;
+esac
+
+#handle reverse proxy setup
+if [ "${REVERSE_PROXY:-false}" = "true" ]; then
+    EFFECTIVE_PROTOCOL="https"
+  echo "Replacing server.xml with reverse proxy friendly version..."
+  if [ -f "$TEMPLATE_DIR/conf/rproxy_server.xml" ]; then
+    cp "$TEMPLATE_DIR/conf/rproxy_server.xml" "$TOMCAT_DIR/conf/server.xml"
+  else
+    echo "WARN: reverse-proxy server.xml template not found at $TEMPLATE_DIR/conf/rproxy_server.xml" >&2
+  fi
+else
+    EFFECTIVE_PROTOCOL="$PROTOCOL"
+fi
+
 for DIR in cache files plugins logs; do
    [ -d "$BASE_DIR/$DIR" ] || mkdir "$BASE_DIR/$DIR"
 done
@@ -45,7 +64,7 @@ if [ ! -d $TOMCAT_DIR/conf/Catalina/localhost ]; then
 fi
 
 if [ ! -f "$TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
-    cat $TEMPLATE_DIR/conf/context_template.xml | sed "s|_SQL_HOST_|$SQL_HOST|g; s|_SQL_PORT_|$SQL_PORT|g; s|_SQL_BASE_|$SQL_BASE|g; s|_SQL_USER_|$SQL_USER|g; s|_SQL_PASS_|$SQL_PASS|g; s|_PROTOCOL_|$PROTOCOL|g; s|_BASE_DOMAIN_|$BASE_DOMAIN|g; s|_SHARED_SECRET_|$SHARED_SECRET|g;" > $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml 
+    cat $TEMPLATE_DIR/conf/context_template.xml | sed "s|_SQL_HOST_|$SQL_HOST|g; s|_SQL_PORT_|$SQL_PORT|g; s|_SQL_BASE_|$SQL_BASE|g; s|_SQL_USER_|$SQL_USER|g; s|_SQL_PASS_|$SQL_PASS|g; s|_PROTOCOL_|$EFFECTIVE_PROTOCOL|g; s|_BASE_DOMAIN_|$BASE_DOMAIN|g; s|_SHARED_SECRET_|$SHARED_SECRET|g;" > $TOMCAT_DIR/conf/Catalina/localhost/ROOT.xml
 fi
 
 for DIR in cache files plugins logs; do
@@ -62,7 +81,7 @@ fi
 
 FILES_TO_DOWNLOAD=$(grep https://h-mdm.com $BASE_DIR/init1.sql | awk '{ print $4 }' | sed "s/'//g; s/)//g; s/,//g")
 
-cat $BASE_DIR/init1.sql | sed "s|https://h-mdm.com|$PROTOCOL://$BASE_DOMAIN|g" > $BASE_DIR/init.sql
+cat $BASE_DIR/init1.sql | sed "s|https://h-mdm.com|$EFFECTIVE_PROTOCOL://$BASE_DOMAIN|g" > $BASE_DIR/init.sql
 rm $BASE_DIR/init1.sql
 
 cd $BASE_DIR/files
@@ -73,22 +92,28 @@ for FILE in $FILES_TO_DOWNLOAD; do
     fi
 done
 
-# jks is always created from the certificates
-if [ "$PROTOCOL" = "https" ]; then
-    if [ "$HTTPS_LETSENCRYPT" = "true" ]; then
-	HTTPS_CERT_PATH=/etc/letsencrypt/live/$BASE_DOMAIN
-        echo "Looking for SSL keys in $HTTPS_CERT_PATH..."
-	# If started by docker-compose, let's wait until certbot completes
-	until [ -f $HTTPS_CERT_PATH/$HTTPS_PRIVKEY ]; do
-            echo "Keys not found, waiting..."
-	    sleep 5
-        done
+if [ "$REVERSE_PROXY" = "true" ]; then
+  echo "Reverse proxy setup enabled, skipping HTTPS setup."
+
+else
+  echo "Reverse proxy setup not enabled, proceeding with HTTPS setup if needed."
+
+    # jks is always created from the certificates
+    if [ "$PROTOCOL" = "https" ]; then
+        if [ "$HTTPS_LETSENCRYPT" = "true" ]; then
+        HTTPS_CERT_PATH=/etc/letsencrypt/live/$BASE_DOMAIN
+            echo "Looking for SSL keys in $HTTPS_CERT_PATH..."
+        # If started by docker-compose, let's wait until certbot completes
+        until [ -f $HTTPS_CERT_PATH/$HTTPS_PRIVKEY ]; do
+                echo "Keys not found, waiting..."
+            sleep 5
+            done
+        fi
+
+        openssl pkcs12 -export -out $TOMCAT_DIR/ssl/hmdm.p12 -inkey $HTTPS_CERT_PATH/$HTTPS_PRIVKEY -in $HTTPS_CERT_PATH/$HTTPS_CERT -certfile $HTTPS_CERT_PATH/$HTTPS_FULLCHAIN -password pass:$PASSWORD
+        keytool -importkeystore -destkeystore $TOMCAT_DIR/ssl/hmdm.jks -srckeystore $TOMCAT_DIR/ssl/hmdm.p12 -srcstoretype PKCS12 -srcstorepass $PASSWORD -deststorepass $PASSWORD -noprompt    
     fi
-
-    openssl pkcs12 -export -out $TOMCAT_DIR/ssl/hmdm.p12 -inkey $HTTPS_CERT_PATH/$HTTPS_PRIVKEY -in $HTTPS_CERT_PATH/$HTTPS_CERT -certfile $HTTPS_CERT_PATH/$HTTPS_FULLCHAIN -password pass:$PASSWORD
-    keytool -importkeystore -destkeystore $TOMCAT_DIR/ssl/hmdm.jks -srckeystore $TOMCAT_DIR/ssl/hmdm.p12 -srcstoretype PKCS12 -srcstorepass $PASSWORD -deststorepass $PASSWORD -noprompt    
 fi
-
 # Waiting for the database
 until PGPASSWORD=$SQL_PASS psql -h "$SQL_HOST" -U "$SQL_USER" -d "$SQL_BASE" -c '\q'; do
   echo "Waiting for the PostgreSQL database..."
