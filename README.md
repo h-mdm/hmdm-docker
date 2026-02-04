@@ -28,7 +28,7 @@ Headwind MDM URL) in the Dockerfile and change them if required.
 
 The build command is:
 
-    docker build -t headwindmdm/hmdm:0.1.5 .
+    docker build -t headwindmdm/hmdm:0.1.6 .
 
 ## Prerequisites
 
