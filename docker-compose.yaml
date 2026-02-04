@@ -34,7 +34,7 @@ services:
       - ./volumes/db:/var/lib/postgresql/data
 
   hmdm:
-    image: headwindmdm/hmdm:0.1.5
+    image: headwindmdm/hmdm:0.1.7
     ports:
       # Uncomment this port forwarding if you want to use plain HTTP instead of HTTPS
       #- 80:8080
