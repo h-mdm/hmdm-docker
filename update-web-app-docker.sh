@@ -8,6 +8,16 @@ FILES_DIRECTORY=$TOMCAT_HOME/work/files
 WAR_FILE=$TOMCAT_HOME/webapps/ROOT.war
 MANIFEST_FILE=$FILES_DIRECTORY/hmdm_web_update_manifest.txt
 
+if [ -n "$HTTP_PORT" ]; then
+    sed -i.bak "s/port=\"8080\"/port=\"$HTTP_PORT\"/g" $TOMCAT_HOME/conf/server.xml
+    echo "Updated HTTP port to $HTTP_PORT" $?
+fi
+
+if [ -n "$HTTPS_PORT" ]; then
+    sed -i.bak "s/port=\"8443\"/port=\"$HTTPS_PORT\"/g" $TOMCAT_HOME/conf/server.xml
+    echo "Updated HTTPS port to $HTTPS_PORT" $?
+fi
+
 if [ ! -f $MANIFEST_FILE ]; then
     echo "No updates found. Select 'admin - Check for updates' in the web panel"
     exit 1
@@ -20,7 +30,6 @@ if [ ! -f $NEW_WAR_FILE ]; then
     echo " Select 'admin - Check for updates - Get updates' in the web panel"
     exit 1
 fi
-
 
 echo "Version to install: $NEW_WAR_FILE"
 echo "Destination: $WAR_FILE"
