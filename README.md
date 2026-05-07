@@ -28,7 +28,7 @@ Headwind MDM URL) in the Dockerfile and change them if required.
 
 The build command is:
 
-    docker build -t headwindmdm/hmdm:0.1.7 .
+    docker build -t headwindmdm/hmdm:0.1.8 .
 
 ## Prerequisites
 
@@ -52,7 +52,7 @@ the domain where Headwind MDM should be installed.
 
 To create the container, use the command:
 
-    docker run -d -p 443:8443 -p 31000:31000 -e SQL_HOST=database.host -e SQL_BASE=hmdm -e SQL_USER=hmdm -e SQL_PASS=password -e BASE_DOMAIN=mdm.your-domain.com -v /etc/letsencrypt:/etc/letsencrypt -v $(pwd)/volumes/work:/usr/local/tomcat/work --name="hmdm" headwindmdm/hmdm:0.1.7
+    docker run -d -p 443:8443 -p 31000:31000 -e SQL_HOST=database.host -e SQL_BASE=hmdm -e SQL_USER=hmdm -e SQL_PASS=password -e BASE_DOMAIN=mdm.your-domain.com -v /etc/letsencrypt:/etc/letsencrypt -v $(pwd)/volumes/work:/usr/local/tomcat/work --name="hmdm" headwindmdm/hmdm:0.1.8
 
 If everything is fine, Headwind MDM will become available via the url 
 `https://mdm.your-domain.com` in a few seconds. 
@@ -132,6 +132,31 @@ license keys, please fill the form at
 
 https://h-mdm.com/contact-us/
 
+## Updating the software
+
+To update Headwind MDM web panel, sign in, and download the new version through
+**admin -> check for updates** (click "Update" to download updates).
+
+Once the update is downloaded, restart the container - it should install the 
+new version.
+
+    docker-compose restart hmdm
+	
+Notice: using start and stop instead of restart WILL NOT run the update.
+
+In the browser, reload the Headwind MDM web application (Ctrl-F5 in Chrome), 
+and check the version through **admin -> About**. If you still see the old 
+version, try clearing the browser cache.
+
+To update both Headwind MDM and Tomcat services, compare the version of the 
+hmdm container in docker-compose.yaml with the latest tag at 
+https://github.com/h-mdm/hmdm-docker. 
+
+If your version is outdated, update the version number in docker-compose.yaml 
+and pull the changes:
+
+    docker-compose up -d
+
 ## Attaching to the container
 
 You may need to attach to the container to change the Headwind MDM configuration
@@ -141,7 +166,7 @@ To find the container ID, use the command
 
     docker ps
 
-Find the container ID of the image headwindmdm/hmdm:0.1.7, then run the command
+Find the container ID of the image headwindmdm/hmdm:0.1.8, then run the command
 
     docker exec -it containerid /bin/bash
 
