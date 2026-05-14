@@ -1,9 +1,6 @@
 [submodule "hmdm-server"]
 	path = hmdm-server
 	url = https://github.com/h-mdm/hmdm-server.git
-	branch = master
-
 [submodule "hmdm-server-plugin_location-map"]
 	path = hmdm-server-plugin_location-map
-	url = https://github.com/h-mdm/hmdm-server-plugin_location-map.git
-	branch = master
+	url = git@github.com:aHVzY2g/hmdm-server-plugin_location-map.git
