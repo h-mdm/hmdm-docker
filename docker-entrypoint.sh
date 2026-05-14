@@ -10,6 +10,12 @@ for DIR in cache files plugins logs; do
    [ -d "$BASE_DIR/$DIR" ] || mkdir "$BASE_DIR/$DIR"
 done
 
+# Install location plugin from baked-in artifacts (always keeps the image version current)
+if [ -f "/opt/hmdm/artifacts/plugins/locationmap.jar" ]; then
+    echo "Installing location plugin..."
+    cp /opt/hmdm/artifacts/plugins/locationmap.jar $BASE_DIR/plugins/locationmap.jar
+fi
+
 if [ ! -z "$LOCAL_IP" ]; then
     EXISTS=`grep $BASE_DOMAIN /etc/hosts`
     if [ -z "$EXISTS" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
@@ -20,21 +26,32 @@ if [ ! -z "$LOCAL_IP" ]; then
     fi
 fi
 
-HMDM_WAR="$(basename -- $HMDM_URL)"
+BUILT_WAR=/opt/hmdm/artifacts/hmdm.war
 
-if [ -f "$CACHE_DIR/$HMDM_WAR" ] && [ "$FORCE_RECONFIGURE" = "true" ]; then
-    rm -f $CACHE_DIR/$HMDM_WAR
-fi
-
-if [ ! -f "$CACHE_DIR/$HMDM_WAR" ]; then
-    if ! wget $DOWNLOAD_CREDENTIALS $HMDM_URL -O $CACHE_DIR/$HMDM_WAR; then
-        echo "Failed to retrieve $HMDM_URL!"
-        exit 1
+if [ -f "$BUILT_WAR" ]; then
+    # Use the WAR built from source during docker build
+    if [ ! -f "$TOMCAT_DIR/webapps/ROOT.war" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
+        echo "Deploying source-built WAR..."
+        cp $BUILT_WAR $TOMCAT_DIR/webapps/ROOT.war
     fi
-fi
+else
+    # Fall back to downloading from HMDM_URL (used with pre-built images)
+    HMDM_WAR="$(basename -- $HMDM_URL)"
 
-if [ ! -f "$TOMCAT_DIR/webapps/ROOT.war" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
-    cp $CACHE_DIR/$HMDM_WAR $TOMCAT_DIR/webapps/ROOT.war
+    if [ -f "$CACHE_DIR/$HMDM_WAR" ] && [ "$FORCE_RECONFIGURE" = "true" ]; then
+        rm -f $CACHE_DIR/$HMDM_WAR
+    fi
+
+    if [ ! -f "$CACHE_DIR/$HMDM_WAR" ]; then
+        if ! wget $DOWNLOAD_CREDENTIALS $HMDM_URL -O $CACHE_DIR/$HMDM_WAR; then
+            echo "Failed to retrieve $HMDM_URL!"
+            exit 1
+        fi
+    fi
+
+    if [ ! -f "$TOMCAT_DIR/webapps/ROOT.war" ] || [ "$FORCE_RECONFIGURE" = "true" ]; then
+        cp $CACHE_DIR/$HMDM_WAR $TOMCAT_DIR/webapps/ROOT.war
+    fi
 fi
 
 $HMDM_DIR/update-web-app-docker.sh
