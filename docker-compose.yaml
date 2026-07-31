@@ -44,6 +44,7 @@ services:
       - ./volumes/work:/usr/local/tomcat/work
       - ./volumes/letsencrypt:/etc/letsencrypt
       - ./volumes/hmdm-config:/usr/local/tomcat/conf/Catalina/localhost
+      - ./volumes/webapps:/usr/local/tomcat/webapps
     environment:
       SQL_HOST: postgresql
       SQL_USER: ${SQL_USER}
