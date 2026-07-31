@@ -28,7 +28,7 @@ Headwind MDM URL) in the Dockerfile and change them if required.
 
 The build command is:
 
-    docker build -t headwindmdm/hmdm:0.1.8 .
+    docker build -t headwindmdm/hmdm:0.1.9 .
 
 ## Prerequisites
 
@@ -52,7 +52,7 @@ the domain where Headwind MDM should be installed.
 
 To create the container, use the command:
 
-    docker run -d -p 443:8443 -p 31000:31000 -e SQL_HOST=database.host -e SQL_BASE=hmdm -e SQL_USER=hmdm -e SQL_PASS=password -e BASE_DOMAIN=mdm.your-domain.com -v /etc/letsencrypt:/etc/letsencrypt -v $(pwd)/volumes/work:/usr/local/tomcat/work --name="hmdm" headwindmdm/hmdm:0.1.8
+    docker run -d -p 443:8443 -p 31000:31000 -e SQL_HOST=database.host -e SQL_BASE=hmdm -e SQL_USER=hmdm -e SQL_PASS=password -e BASE_DOMAIN=mdm.your-domain.com -v /etc/letsencrypt:/etc/letsencrypt -v $(pwd)/volumes/work:/usr/local/tomcat/work --name="hmdm" headwindmdm/hmdm:0.1.9
 
 If everything is fine, Headwind MDM will become available via the url 
 `https://mdm.your-domain.com` in a few seconds. 
@@ -166,7 +166,7 @@ To find the container ID, use the command
 
     docker ps
 
-Find the container ID of the image headwindmdm/hmdm:0.1.8, then run the command
+Find the container ID of the image headwindmdm/hmdm:0.1.9, then run the command
 
     docker exec -it containerid /bin/bash
 
