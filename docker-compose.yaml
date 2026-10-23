@@ -34,10 +34,12 @@ services:
       - ./volumes/db:/var/lib/postgresql/data
 
   hmdm:
-    # Built locally from this repo's Dockerfile (pinned Tomcat).
+    image: headwindmdm/hmdm:0.1.9
+    # To build the image locally from this repo's Dockerfile instead,
+    # comment out the line above and uncomment the two lines below.
     # Rebuild with: docker compose build --pull hmdm
-    build: .
-    image: hmdm:local
+    #build: .
+    #image: hmdm:local
     ports:
       # Uncomment this port forwarding if you want to use plain HTTP instead of HTTPS
       #- 80:8080
